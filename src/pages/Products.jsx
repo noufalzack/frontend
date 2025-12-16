@@ -6,13 +6,24 @@ import "./Products.css";
 
 function Products() {
   const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
   const { addToCart } = useCart();
 
   useEffect(() => {
-    axios
-      .get("https://fakestoreapi.com/products")
-      .then((res) => setProducts(res.data))
-      .catch((err) => console.error(err));
+    const fetchProducts = async () => {
+      try {
+        const res = await axios.get("https://fakestoreapi.com/products");
+        setProducts(res.data);
+      } catch (err) {
+        console.error(err);
+        setError("Unable to load products. Please try again later.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
   }, []);
 
   return (
@@ -21,37 +32,56 @@ function Products() {
 
       <h2 className="products-title">Our Products</h2>
 
-      <div className="products-container">
-        {products.map((product) => (
-          <div className="product-card" key={product.id}>
-            <img
-              src={product.image}
-              alt={product.title}
-              className="product-image"
-            />
+      {/* ✅ Loading */}
+      {loading && <p className="status-text">Loading products...</p>}
 
-            <h3 className="product-name">{product.title}</h3>
+      {/* ✅ Error */}
+      {error && <p className="status-text error-text">{error}</p>}
 
-            <p className="product-description">
-              {product.description.substring(0, 100)}...
-            </p>
+      {/* ✅ Products */}
+      {!loading && !error && (
+        <div className="products-container">
+          {products.length === 0 ? (
+            <p className="status-text">No products available</p>
+          ) : (
+            products.map((product) => (
+              <div className="product-card" key={product.id}>
+                <img
+                  src={product.image}
+                  alt={product.title}
+                  className="product-image"
+                />
 
-            <p className="product-price">
-              ₹ {(product.price * 80).toFixed(0)}
-            </p>
+                <h3 className="product-name">{product.title}</h3>
 
-            <div className="product-buttons">
-              <button className="buy-btn">Buy Now</button>
-              <button
-                className="cart-btn"
-                onClick={() => addToCart(product)}
-              >
-                Add to Cart
-              </button>
-            </div>
-          </div>
-        ))}
-      </div>
+                <p className="product-description">
+                  {product.description.substring(0, 100)}...
+                </p>
+
+                <p className="product-price">
+                  ₹ {(product.price * 80).toFixed(0)}
+                </p>
+
+                <div className="product-buttons">
+                  <button
+                    className="buy-btn"
+                    onClick={() => alert("Buy Now feature coming soon")}
+                  >
+                    Buy Now
+                  </button>
+
+                  <button
+                    className="cart-btn"
+                    onClick={() => addToCart(product)}
+                  >
+                    Add to Cart
+                  </button>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+      )}
     </>
   );
 }

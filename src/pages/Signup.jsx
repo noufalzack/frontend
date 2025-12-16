@@ -3,6 +3,9 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./Signup.css";
 
+// ✅ Backend hosted URL
+const API_BASE_URL = "https://backend-dw29.onrender.com";
+
 function Signup() {
   const navigate = useNavigate();
 
@@ -14,11 +17,12 @@ function Signup() {
   });
 
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-
+    // ✅ Mobile number validation (numbers only, max 10)
     if (name === "mobile") {
       if (!/^\d*$/.test(value)) return;
       if (value.length > 10) return;
@@ -30,10 +34,11 @@ function Signup() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+    setSuccess("");
 
     const { name, email, mobile, password } = formData;
 
-
+    // ✅ Validations
     if (!name || !email || !mobile || !password) {
       setError("All fields are required");
       return;
@@ -55,8 +60,18 @@ function Signup() {
     }
 
     try {
-      await axios.post("http://localhost:5000/api/auth/signup", formData);
-      navigate("/login");
+      await axios.post(
+        `${API_BASE_URL}/api/auth/signup`,
+        formData
+      );
+
+      // ✅ Success message
+      setSuccess("Signup successful! Redirecting to login...");
+
+      // ✅ Redirect after delay
+      setTimeout(() => {
+        navigate("/login");
+      }, 1200);
     } catch (err) {
       if (err.response?.data?.message) {
         setError(err.response.data.message);
@@ -68,12 +83,17 @@ function Signup() {
 
   return (
     <>
+      {/* ✅ Site title */}
       <h1 className="site-title">Ecom Store</h1>
 
       <div className="signup-container">
         <h2>Create Account</h2>
 
+        {/* ✅ Error */}
         {error && <div className="error-box">{error}</div>}
+
+        {/* ✅ Success */}
+        {success && <div className="success-box">{success}</div>}
 
         <form onSubmit={handleSubmit}>
           <input
