@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./Signup.css";
 
-// ✅ Backend hosted URL
+// ✅ Backend hosted URL (use once, everywhere)
 const API_BASE_URL = "https://backend-dw29.onrender.com";
 
 function Signup() {
@@ -22,7 +22,7 @@ function Signup() {
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    // ✅ Mobile number validation (numbers only, max 10)
+    // ✅ Mobile number: numbers only, max 10 digits
     if (name === "mobile") {
       if (!/^\d*$/.test(value)) return;
       if (value.length > 10) return;
@@ -60,16 +60,15 @@ function Signup() {
     }
 
     try {
-    await axios.post(
-  "https://backend-dw29.onrender.com/api/auth/signup",
-  formData
-);
-
+      await axios.post(
+        `${API_BASE_URL}/api/auth/signup`,
+        formData
+      );
 
       // ✅ Success message
       setSuccess("Signup successful! Redirecting to login...");
 
-      // ✅ Redirect after delay
+      // ✅ Redirect after short delay
       setTimeout(() => {
         navigate("/login");
       }, 1200);
@@ -90,10 +89,10 @@ function Signup() {
       <div className="signup-container">
         <h2>Create Account</h2>
 
-        {/* ✅ Error */}
+        {/* ✅ Error message */}
         {error && <div className="error-box">{error}</div>}
 
-        {/* ✅ Success */}
+        {/* ✅ Success message */}
         {success && <div className="success-box">{success}</div>}
 
         <form onSubmit={handleSubmit}>
