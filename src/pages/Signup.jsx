@@ -60,10 +60,11 @@ function Signup() {
     }
 
     try {
-      await axios.post(
-        `${API_BASE_URL}/api/auth/signup`,
-        formData
-      );
+    await axios.post(
+  "https://backend-dw29.onrender.com/api/auth/signup",
+  formData
+);
+
 
       // ✅ Success message
       setSuccess("Signup successful! Redirecting to login...");
