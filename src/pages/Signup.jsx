@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./Signup.css";
 
-// ✅ Backend hosted URL (use once, everywhere)
+
 const API_BASE_URL = "https://backend-dw29.onrender.com";
 
 function Signup() {
@@ -22,7 +22,7 @@ function Signup() {
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    // ✅ Mobile number: numbers only, max 10 digits
+    
     if (name === "mobile") {
       if (!/^\d*$/.test(value)) return;
       if (value.length > 10) return;
@@ -38,7 +38,7 @@ function Signup() {
 
     const { name, email, mobile, password } = formData;
 
-    // ✅ Validations
+    
     if (!name || !email || !mobile || !password) {
       setError("All fields are required");
       return;
@@ -65,10 +65,10 @@ function Signup() {
         formData
       );
 
-      // ✅ Success message
+      
       setSuccess("Signup successful! Redirecting to login...");
 
-      // ✅ Redirect after short delay
+      
       setTimeout(() => {
         navigate("/login");
       }, 1200);
